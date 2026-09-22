@@ -20,7 +20,7 @@ async def start_audit(callback: CallbackQuery, state: FSMContext):
         items = conn.execute("SELECT id, name, unit, expected_stock FROM items").fetchall()
 
     if not items:
-        await callback.message.edit_text("Сначала добавь товары через меню.", reply_markup=get_main_menu())
+        await callback.answer("Сначала добавь товары через меню.", show_alert=True)
         return
 
     await state.set_state(AuditStates.choosing_item)
@@ -84,4 +84,3 @@ async def enter_actual(message: Message, state: FSMContext):
 async def finish_audit(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.message.edit_text("Ревизия завершена ✅", reply_markup=get_main_menu())
-    
