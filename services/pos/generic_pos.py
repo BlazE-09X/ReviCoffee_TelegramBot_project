@@ -3,10 +3,14 @@ from datetime import datetime
 from services.pos.base import POSAdapter
 
 
-class MasterCoffeeAdapter(POSAdapter):
-    def __init__(self, api_token: str):
+class GenericPOSAdapter(POSAdapter):
+    """Шаблон адаптера под произвольную POS-систему.
+    При подключении конкретной кассы — копируем этот файл, переименовываем класс
+    и подставляем реальные эндпоинты/поля ответа."""
+
+    def __init__(self, api_token: str, base_url: str):
         self.api_token = api_token
-        self.base_url = "https://api.mastercoffee.example/v1"  # заменить на реальный при подключении
+        self.base_url = base_url
 
     def get_sales_for_period(self, date_from: datetime, date_to: datetime) -> list[dict]:
         response = requests.get(

@@ -19,27 +19,19 @@ def init_db():
         cursor = conn.cursor()
 
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS items (
+            CREATE TABLE IF NOT EXISTS drinks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                unit TEXT NOT NULL,               -- кг, л, шт
-                expected_stock REAL NOT NULL DEFAULT 0,
-                price_per_unit REAL NOT NULL DEFAULT 0,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                name TEXT NOT NULL UNIQUE
             )
         """)
 
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS audit_records (
+            CREATE TABLE IF NOT EXISTS recipe_ingredients (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                drink_id INTEGER NOT NULL,
                 item_id INTEGER NOT NULL,
-                staff_telegram_id INTEGER NOT NULL,
-                staff_name TEXT,
-                actual_stock REAL NOT NULL,
-                expected_stock_at_time REAL NOT NULL,
-                discrepancy REAL NOT NULL,         -- actual - expected
-                data_source TEXT DEFAULT 'manual',  -- manual / pos / scale / photo — задел на будущее
-                audit_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                amount_per_drink REAL NOT NULL,   -- сколько единицы item уходит на 1 напиток
+                FOREIGN KEY (drink_id) REFERENCES drinks (id),
                 FOREIGN KEY (item_id) REFERENCES items (id)
             )
         """)
